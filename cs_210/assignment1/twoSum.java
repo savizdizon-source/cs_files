@@ -1,6 +1,6 @@
 public class twoSum {
     public static void main(String[] args) {
-        int[] array = {15, 4, 18, 8, 19, 22, 24, 59, 59, 20, 18, 12, 36, 42, 9};
+        int[] array = {15, 4, 18, 8, 19, 22, 24, 59, 59, 18, 12, 36, 42, 9};
         int[] answer = twoSumBruteForce(array, 24);
 
         for (int num : answer) {
@@ -14,7 +14,7 @@ public class twoSum {
         int[] answer = {-1, -1};
         for (i = 0; i < array.length; i++) {
             for (j = 0; j < array.length; j++) {
-                if ((i + j) == target) {
+                if ((array[i] + array[j]) == target) {
                     answer[0] = i;
                     answer[1] = j;
                     return answer;
