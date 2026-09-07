@@ -1,30 +1,39 @@
 public class hw1_2 {
     public static void main(String[] args) {
-        String num = "8";
-        String convertTo = "octal";
+        test("0", 10);
+        test("FFFFFFFF", 16);
+        test("-1", 10);
+        test(Integer.toString(Integer.MIN_VALUE), 10);
+        // String num = "8";
+        // String convertTo = "octal";
 
-        int converted;
+        // int converted;
 
-        switch (convertTo) {
-            case "binary":
-                converted = convert(num, 2);
-                System.out.println("Binary: " + converted);
-                break;
-            case "decimal":
-                converted = convert(num, 10);
-                System.out.println("Decimal: " + converted);
-                break;
-            case "octal":
-                converted = convert(num, 8);
-                System.out.println("Octal: " + converted);
-                break;
-            case "hexadecimal":
-                converted = convert(num, 16);
-                System.out.println("Hexadecimal: " + converted);
-                break;
-            default:
-                throw new AssertionError();
-        }
+        // switch (convertTo) {
+        //     case "binary":
+        //         converted = convert(num, 2);
+        //         System.out.println("Binary: " + converted);
+        //         break;
+        //     case "decimal":
+        //         converted = convert(num, 10);
+        //         System.out.println("Decimal: " + converted);
+        //         break;
+        //     case "octal":
+        //         converted = convert(num, 8);
+        //         System.out.println("Octal: " + converted);
+        //         break;
+        //     case "hexadecimal":
+        //         converted = convert(num, 16);
+        //         System.out.println("Hexadecimal: " + converted);
+        //         break;
+        //     default:
+        //         throw new AssertionError();
+    }
+
+    static void test(String num, int base) {
+        int converted = convert(num, base);
+        System.out.println("Number: " + num + "\nConverting to: " + base + 
+                            "\nConverted num: " + converted);
     }
 
     // Number converter
