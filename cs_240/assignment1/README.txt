@@ -2,7 +2,7 @@
 Takes input from user and uses ord function to print the ASCII value of each letter
 
 2.
-
+Takes in a number as a string and converts it based on the given base using parseInt
 
 3. 
 Takes an image file and reads each pixel's color then uses that 

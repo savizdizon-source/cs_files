@@ -1,7 +1,7 @@
 public class hw1_2 {
     public static void main(String[] args) {
         test("0", 10);
-        test("FFFFFFFF", 16);
+        test("FFFFFF", 16);
         test("-1", 10);
         test(Integer.toString(Integer.MIN_VALUE), 10);
         // String num = "8";

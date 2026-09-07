@@ -1,7 +1,8 @@
 import sys
 
 # 1. Build ASCII to decimal converter.
-s = sys.argv[1]
+# s = sys.argv[1]
+s = "Hello World"
 
 # print(s)
 # print(list(x for x in str))
