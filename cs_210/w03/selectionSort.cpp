@@ -3,7 +3,7 @@
 #include <vector>
 using namespace std;
 
-vector<int> selectionSort(int* numbers, int numbersSize ) {
+void selectionSort(int* numbers, int numbersSize) {
     for (int i = 0; i < numbersSize - 1; i++) {
         int smallestIndex = i;
         for (int j = i + 1; j < numbersSize; j++) {
@@ -11,17 +11,18 @@ vector<int> selectionSort(int* numbers, int numbersSize ) {
                 smallestIndex = j;
             }
         }
+
         int temp = numbers[i];
         numbers[i] = numbers[smallestIndex];
-        numbers[smallestIndex] = temp;    
+        numbers[smallestIndex] = temp;
     }
 }
 
 int main() {
     vector<int> arr = {4, 12, 66, 1, 5, 17};
-    vector<int> sorted = selectionSort(arr.data(), arr.size());
+    selectionSort(arr.data(), arr.size());
 
-    for (auto& val : sorted) {
+    for (auto& val : arr) {
         cout << val << endl;
     }
 }
