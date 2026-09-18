@@ -1,22 +1,22 @@
+#include <iostream>
+
 class Node {
     public:
         int value;
-        int* valuep = &value;
         Node* next;
     
-        Node(int* num) {
-            valuep = num;
+        Node(int num) {
+            value = num;
             next = nullptr;
         }
 };
 
 class SinglyLinkedList {
-    private:
+    public:
         Node* head;
         Node* tail;
         Node* current; 
 
-    public:
         SinglyLinkedList() {
             head = nullptr;
             tail = nullptr;
@@ -24,7 +24,7 @@ class SinglyLinkedList {
 
         Node* search(int val) {
             Node* currentNode = head;
-            while (currentNode) {
+            while (currentNode != nullptr) {
                 if (currentNode->value == val) {
                     return currentNode;
                 }
@@ -67,8 +67,37 @@ class SinglyLinkedList {
                 }
             }
         }
+
+        void printList() {
+            current = head;
+            while(current != nullptr) {
+                std::cout << current->value << " " << std::endl; 
+                current = current->next;
+            }
+        }
 };
 
 int main() {
-    
+    Node* node1 = new Node (1); 
+
+    Node* node2 = new Node(2);
+
+    Node* node3 = new Node(3);
+
+    // std::cout << node1->value << node2->value << node3->value << std::endl;
+
+    SinglyLinkedList list;
+
+    list.insert(nullptr, node1);
+    list.insert(node1, node2);
+    list.insert(node2, node3);
+
+    list.printList();
+
+    std::cout << "Looking for element 2: " << list.search(2)->value << std::endl;
+
+    list.removeNodeAfter(node1);
+
+    list.printList();
+
 }
