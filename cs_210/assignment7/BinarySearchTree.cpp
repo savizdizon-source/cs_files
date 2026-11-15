@@ -1,10 +1,11 @@
 #include <iostream>
+#include <algorithm>   // for std::max (used in height)
 
 class Node {
-    public: 
+    public:
         int val;
-        Node* left = nullptr;
-        Node* right = nullptr;
+        Node* left;
+        Node* right;
 
         Node(int num) {
             val = num;
@@ -14,183 +15,196 @@ class Node {
 };
 
 class BinarySearchTree {
+    private:
+        Node* root;
+        void inorderHelper(Node* node) {
+            if (node == nullptr) {
+                return;
+            }
+            inorderHelper(node->left); // smaller values first
+            std::cout << node->val << " ";
+            inorderHelper(node->right); // then larger values
+        }
 
-    Node* root = nullptr; 
+        void preorderHelper(Node* node) {
+            if (node == nullptr) {
+                return;
+            }
+            std::cout << node->val << " "; // visit node first
+            preorderHelper(node->left);
+            preorderHelper(node->right);
+        }
 
-    public: 
-        void insert(Node* newNode) {
+        void postorderHelper(Node* node) {
+            if (node == nullptr) {
+                return;
+            }
+            postorderHelper(node->left);
+            postorderHelper(node->right);
+            std::cout << node->val << " "; // visit node last
+        }
+
+        int heightHelper(Node* node) {
+            if (node == nullptr) {
+                return -1; // empty tree has height -1
+            }
+            return 1 + std::max(heightHelper(node->left), heightHelper(node->right));
+        }
+
+        void destroy(Node* node) {
+            if (node == nullptr) {
+                return;
+            }
+            destroy(node->left);
+            destroy(node->right);
+            delete node;
+        }
+
+    public:
+        BinarySearchTree() {
+            root = nullptr;
+        }
+
+        ~BinarySearchTree() {
+            destroy(root);
+        }
+
+        void insert(int value) {
             if (root == nullptr) {
-                root = newNode;
+                root = new Node(value);
                 return;
             }
 
             Node* curr = root;
             while (true) {
-                if (newNode->val < curr->val) {
+                if (value < curr->val) {
                     if (curr->left == nullptr) {
-                        curr->left = newNode;
+                        curr->left = new Node(value);
                         return;
                     }
                     curr = curr->left;
-                } else if (newNode->val > curr->val) {
+                } else if (value > curr->val) {
                     if (curr->right == nullptr) {
-                        curr->right = newNode;
+                        curr->right = new Node(value);
                         return;
                     }
                     curr = curr->right;
                 } else {
-                    return;
+                    return;     // value already in the tree
                 }
             }
         }
 
-        int search(Node* node) {
+        bool search(int key) {
             Node* curr = root;
-            int toFind = node->val;
             while (curr != nullptr) {
-                if (curr->val == toFind) {
-                    return curr->val;
-                } else if (toFind < curr->val) {
+                if (key == curr->val) {
+                    return true;
+                } else if (key < curr->val) {
                     curr = curr->left;
                 } else {
                     curr = curr->right;
                 }
             }
-
-            return -1;
+            return false;
         }
 
         bool remove(int key) {
             Node* parent = nullptr;
-            Node* currentNode = root;
-        
-            while (currentNode) { 
-                if (currentNode->val == key) {
-                    if (currentNode->left == nullptr && currentNode->right == nullptr) {
-                        if (parent == nullptr) { 
-                           root = nullptr;
-                        }
-                        else if (parent->left == currentNode) { 
-                           parent->left = nullptr;
-                        }
-                        else {
-                           parent->right = nullptr;
-                        }
-                        delete currentNode;
-                        return true; 
-                    } else if (currentNode->left && currentNode->right == nullptr) {
-                        if (parent == nullptr) { 
-                           root = currentNode->left;
-                        }
-                        else if (parent->left == currentNode) {
-                           parent->left = currentNode->left;
-                        }
-                        else {
-                           parent->right = currentNode->left;
-                        }
-                        delete currentNode;
-                        return true; 
-                    } else if (currentNode->left == nullptr && currentNode->right) {
-                        if (parent == nullptr) { 
-                           root = currentNode->right;
-                        }
-                        else if (parent->left == currentNode) {
-                           parent->left = currentNode->right;
-                        }
-                        else {
-                           parent->right = currentNode->right;
-                        }
-                        delete currentNode;
-                        return true; 
-                    } else {
-                        Node* successor = currentNode->right;
-                        while (successor->left) {
-                           successor = successor->left;
-                        }
-                        currentNode->val = successor->val;
-                        parent = currentNode;
-                    
-                        currentNode = currentNode->right;
-                        key = successor->val;
-                    }
-                } else if (currentNode->val < key) {
-                    parent = currentNode;
-                    currentNode = currentNode->right;
+            Node* curr = root;
+            while (curr != nullptr && curr->val != key) {
+                parent = curr;
+                if (key < curr->val) {
+                    curr = curr->left;
                 } else {
-                    parent = currentNode;
-                    currentNode = currentNode->left;
+                    curr = curr->right;
                 }
             }
-            return false; 
-        }
 
-        void inorderTraversal(Node* node) { // starting from the smallest to the largest 
-            if (node == nullptr) {
-                return;
+            if (curr == nullptr) {
+                return false;   
             }
 
-            inorderTraversal(node->left);
-            std::cout << node->val << " " << std::endl;
-            inorderTraversal(node->right);
-        }
+            if (curr->left != nullptr && curr->right != nullptr) {
+                Node* successorParent = curr;
+                Node* successor = curr->right;
+                while (successor->left != nullptr) {
+                    successorParent = successor;
+                    successor = successor->left;
+                }
+                curr->val = successor->val;
 
-        void preorderTraversal(Node* node) {
-            if (node == nullptr) {
-                return;
+                parent = successorParent;
+                curr = successor;
             }
 
-            std::cout << node->val << " " << std::endl;
-            preorderTraversal(node->left);
-            preorderTraversal(node->right);
-        }
-
-        void postorderTraversal(Node* node) {
-            if (node == nullptr) {
-                return;
-            }
-        
-            postorderTraversal(node->left);
-            postorderTraversal(node->right);
-            std::cout << node->val << " " << std::endl;
-        }
-
-        int height(Node* node) {
-            if (node == nullptr) {
-                return -1;
+            Node* child;
+            if (curr->left != nullptr) {
+                child = curr->left;
+            } else {
+                child = curr->right;    
             }
 
-            return 1 + std::max(height(node->left), height(node->right));
+            if (parent == nullptr) {
+                root = child;         
+            } else if (parent->left == curr) {
+                parent->left = child;
+            } else {
+                parent->right = child;
+            }
+
+            delete curr;
+            return true;
+        }
+
+        void inorderTraversal()   { inorderHelper(root);   std::cout << std::endl; }
+        void preorderTraversal()  { preorderHelper(root);  std::cout << std::endl; }
+        void postorderTraversal() { postorderHelper(root); std::cout << std::endl; }
+
+        int height() {
+            return heightHelper(root);
         }
 };
 
+void showSearch(BinarySearchTree& tree, int key) {
+    std::cout << "Search for " << key << ": "
+              << (tree.search(key) ? "FOUND" : "NOT FOUND") << std::endl;
+}
+
 int main() {
-    Node* n1 = new Node(3);
-    Node* n2 = new Node(5);
-    Node* n3 = new Node(12);
-    Node* n4 = new Node(7);
+    BinarySearchTree tree;
 
-    BinarySearchTree* tree = new BinarySearchTree();
+    // inserting integers
+    int values[] = {50, 30, 70, 20, 40, 60, 80, 35, 65, 10};
+    for (int v : values) {
+        tree.insert(v);
+    }
 
-    tree->insert(n1);
-    tree->insert(n2);
-    tree->insert(n3);
-    tree->insert(n4);
+    std::cout << "Preorder:  ";  tree.preorderTraversal();
+    std::cout << "Inorder:   ";  tree.inorderTraversal();
+    std::cout << "Postorder: ";  tree.postorderTraversal();
+    std::cout << "Height: " << tree.height() << std::endl;
 
-    std::cout << "Searching for node4 value (7): " << tree->search(n4) << std::endl;
-    std::cout << std::endl;
-    std::cout << "Preorder traversal: " << std::endl;
-    tree->preorderTraversal(n1);
+    std::cout << "\nSearch" << std::endl;
+    showSearch(tree, 60);  
+    showSearch(tree, 99);   
 
-    std::cout << std::endl;
-    std::cout << "Inorder traversal: " << std::endl;
-    tree->inorderTraversal(n1);
+    std::cout << "\nRemove 10 (leaf)" << std::endl;
+    tree.remove(10);
+    std::cout << "Inorder: ";  tree.inorderTraversal();
 
-    std::cout << std::endl;
-    std::cout << "Postorder traversal: " << std::endl;
-    tree->postorderTraversal(n1);
+    std::cout << "\nRemove 40 (one child: 35)" << std::endl;
+    tree.remove(40);
+    std::cout << "Inorder: ";  tree.inorderTraversal();
 
-    std::cout << "\nHeight before remove: " << tree->height(n1) << std::endl;
+    std::cout << "\nRemove 50 (two children, the root)" << std::endl;
+    tree.remove(50);
+    std::cout << "Inorder: ";  tree.inorderTraversal();
 
-    tree->remove(5);
-    std::cout << "\nHeight after remove: " << tree->height(n1) << std::endl;
+    std::cout << "\nRemove 999 (absent key)" << std::endl;
+    std::cout << "remove returned: " << (tree.remove(999) ? "true" : "false") << std::endl;
+
+    std::cout << "\nFinal height: " << tree.height() << std::endl;
+
+    return 0;
 }
